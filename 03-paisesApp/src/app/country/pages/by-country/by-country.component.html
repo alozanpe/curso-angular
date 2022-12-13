@@ -3,45 +3,39 @@
 
 <div class="row">
   <div class="col">
-    <form autocomplete="off" (ngSubmit)="buscar()">
-      <input
-        [(ngModel)]="termino"
-        type="text"
-        name="termino"
-        placeholder="Buscar país..."
-        class="form-control"
-      />
-    </form>
+    <app-country-input
+      (onEnter)="buscar($event)"
+      (onDebounce)="suggestions($event)"
+      placeholder="Buscar país..."
+    ></app-country-input>
   </div>
 </div>
 
+<ul class="list-group" *ngIf="showSuggestions">
+  <li
+    class="list-group-item list-group-item-action"
+    *ngFor="let country of suggestedCountries"
+  >
+    <a class="nav-link" [routerLink]="['/country', country.cca2]">{{
+      country.name.official
+    }}</a>
+  </li>
+  <li
+    class="list-group-item list-group-item-action"
+    (click)="searchSuggestion(termino)"
+  >
+    <a class="nav-link">Buscar {{ termino }}</a>
+  </li>
+</ul>
+
 <hr />
 
-<div class="alert alert-danger">
-  <p>No se encontró nada con el término XXX</p>
+<div class="alert alert-danger" *ngIf="hasError">
+  <p>No se encontró nada con el término {{ termino }}</p>
 </div>
 
 <div class="row">
   <div class="col">
-    <table class="table table-hover" aria-describedby="table">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Bandera</th>
-          <th>Nombre</th>
-          <th>Población</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1</td>
-          <td>bandera</td>
-          <td>nombre</td>
-          <td>población</td>
-          <td>un enlace</td>
-        </tr>
-      </tbody>
-    </table>
+    <app-country-table [countries]="countries"></app-country-table>
   </div>
 </div>
